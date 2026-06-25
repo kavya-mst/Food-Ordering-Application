@@ -21,17 +21,13 @@ const {
 
 
 
-// login required
-
-router.use(authMiddleware);
-
-
-
 // user + admin dono
 
 router.get("/", getFoods);
-
 router.get("/:id", getFoodById);
+
+// login required for admin operations
+router.use(authMiddleware);
 
 
 
