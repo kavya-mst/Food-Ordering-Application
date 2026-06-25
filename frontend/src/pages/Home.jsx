@@ -1,13 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { foodData } from '../data/foodData';
+import { useAuth } from '../context/AuthContext';
+import API from '../api/api';
 import FoodCard from '../components/FoodCard';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const popularDishes = foodData
+  const { currentUser } = useAuth();
+  const userName = currentUser?.name?.split(' ')[0];
+
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const res = await fetch(`${API}/foods`);
+        if (!res.ok) {
+          throw new Error('Failed to fetch foods');
+        }
+        const data = await res.json();
+        setFoods(
+          data.map((food) => ({
+            ...food,
+            id: food.id ?? food._id,
+          }))
+        );
+      } catch (err) {
+        console.error('Food fetch failed:', err);
+        setFoods([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFoods();
+  }, []);
+
+  const popularDishes = foods
     .filter((item) => item.rating >= 4.7)
     .slice(0, 4);
 
@@ -24,6 +55,14 @@ const Home = () => {
     navigate(`/menu?category=${encodeURIComponent(category)}`);
   };
 
+  if (loading) {
+    return (
+      <div className="container" style={{ marginTop: '2rem' }}>
+        <p>Loading menu...</p>
+      </div>
+    );
+  }
+
   const categories = [
     { name: 'North Indian', icon: '🍲' },
     { name: 'South Indian', icon: '🫓' },
@@ -37,7 +76,11 @@ const Home = () => {
       <section className="hero">
         <div className="container">
           <div className="hero-content">
-            <h1>Craving Delicious Food?</h1>
+            <h1>
+              {userName
+                ? `Hi, ${userName}! Craving Delicious Food?`
+                : 'Craving Delicious Food?'}
+            </h1>
             <p>Order yummy dishes from BiteSpeed and get them delivered hot & fast!</p>
             <form onSubmit={handleSearchSubmit} className="search-container">
               <input

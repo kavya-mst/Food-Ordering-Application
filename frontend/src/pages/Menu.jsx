@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { foodData } from '../data/foodData';
+import API from '../api/api';
 import FoodCard from '../components/FoodCard';
 
 const Menu = () => {
@@ -11,6 +11,32 @@ const Menu = () => {
 
   const [searchTerm, setSearchTerm] = useState(searchParam);
   const [currentPage, setCurrentPage] = useState(1);
+  const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const res = await fetch(`${API}/foods`);
+        if (!res.ok) {
+          throw new Error('Failed to fetch foods');
+        }
+        const data = await res.json();
+        const mapped = data.map((food) => ({
+          ...food,
+          id: food.id ?? food._id,
+        }));
+        setFoods(mapped);
+      } catch (err) {
+        console.error('Food fetch failed:', err);
+        setFoods([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFoods();
+  }, []);
 
   const itemsPerPage = 6;
 
@@ -60,7 +86,7 @@ const Menu = () => {
     setSearchParams(params);
   };
 
-  const filteredFood = foodData.filter((item) => {
+  const filteredFood = foods.filter((item) => {
     const matchesCategory =
       categoryParam === 'All' ||
       item.category === categoryParam;
@@ -131,7 +157,12 @@ const Menu = () => {
         </div>
       </div>
 
-      {filteredFood.length > 0 ? (
+      {loading ? (
+        <div className="empty-state">
+          <span className="empty-icon">⏳</span>
+          <h3>Loading menu...</h3>
+        </div>
+      ) : filteredFood.length > 0 ? (
         <>
           <div className="menu-grid">
             {currentItems.map((item) => (

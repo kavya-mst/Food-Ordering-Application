@@ -1,23 +1,19 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 
 const FoodCard = ({ item }) => {
-  const { addToCart } = useCart();
-  const { currentUser } = useAuth();
-  const navigate = useNavigate();
-
+  const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
+  const itemId = item.id ?? item._id;
+  const cartItem = cartItems.find((ci) => ci.id === itemId);
+  const quantity = cartItem?.quantity || 0;
   const { name, description, price, rating, category, image } = item;
 
-  const handleAddToCart = () => {
-    if (!currentUser) {
-      alert('Please Login First');
-      navigate('/signin');
-      return;
+  const handleDecrease = () => {
+    if (quantity <= 1) {
+      removeFromCart(itemId);
+    } else {
+      updateQuantity(itemId, quantity - 1);
     }
-
-    addToCart(item);
   };
 
   return (
@@ -29,20 +25,27 @@ const FoodCard = ({ item }) => {
           <span className="food-rating-star">★</span> {rating}
         </span>
       </div>
-
       <div className="food-info">
         <h4 className="food-name">{name}</h4>
         <p className="food-description">{description}</p>
-
         <div className="food-footer">
           <span className="food-price">₹{price}</span>
-
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={handleAddToCart}
-          >
-            + Add to Cart
-          </button>
+          {quantity > 0 ? (
+            <div className="quantity-controller food-quantity-controller">
+              <button className="quantity-btn" onClick={handleDecrease}>-</button>
+              <span className="quantity-value">{quantity}</span>
+              <button
+                className="quantity-btn"
+                onClick={() => updateQuantity(itemId, quantity + 1)}
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            <button className="btn btn-primary btn-sm" onClick={() => addToCart(item)}>
+              + Add
+            </button>
+          )}
         </div>
       </div>
     </div>

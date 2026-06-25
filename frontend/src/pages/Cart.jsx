@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import { useCart } from '../context/CartContext';
@@ -27,7 +27,9 @@ const Cart = () => {
 
   const navigate = useNavigate();
 
-
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const [address,setAddress] = useState("");
   const [phone,setPhone] = useState("");

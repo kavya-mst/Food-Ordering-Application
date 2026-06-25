@@ -22,7 +22,7 @@ const Footer = () => {
             <h3>Support & Contact</h3>
             <p>📍 Kavya Food Court, Block-C</p>
             <p>📞 +91 98765 43210</p>
-            <p>✉️ support@bitespeed.edu</p>
+            <p>✉️ support@foodorder.com</p>
           </div>
           <div className="footer-col">
             <h3>Timings</h3>
@@ -31,7 +31,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} BiteSpeed Food Ordering. Built as a College Mini Project with 🧡</p>
+          <p>&copy; {new Date().getFullYear()} BiteSpeed Food Ordering. 🧡</p>
         </div>
       </div>
     </footer>
