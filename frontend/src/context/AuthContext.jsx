@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import API from "../api/api";
 
 const AuthContext = createContext();
 
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const registerUser = async (name, email, password) => {
     try {
       const res = await fetch(
-        "http://localhost:5001/api/auth/register",
+        `${API}/auth/register`,
         {
           method: "POST",
           headers: {
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
   const loginUser = async (email, password) => {
     try {
       const res = await fetch(
-        "http://localhost:5001/api/auth/login",
+        `${API}/auth/login`,
         {
           method: "POST",
           headers: {

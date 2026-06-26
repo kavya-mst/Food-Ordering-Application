@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from "react";
 import axios from "axios";
+import API from "../api/api";
 import {useAuth} from "../context/AuthContext";
 import {useCart} from "../context/CartContext";
 import {useNavigate} from "react-router-dom";
@@ -43,7 +44,7 @@ localStorage.getItem("token");
 
 const res =
 await axios.get(
-"http://localhost:5001/api/auth/profile",
+`${API}/auth/profile`,
 {
 headers:{
 Authorization:`Bearer ${token}`
@@ -121,7 +122,7 @@ localStorage.getItem("token");
 
 await axios.put(
 
-"http://localhost:5001/api/auth/settings",
+`${API}/auth/settings`,
 
 {
 theme
@@ -167,7 +168,7 @@ localStorage.getItem("token");
 
 await axios.delete(
 
-"http://localhost:5001/api/auth/delete-account",
+`${API}/auth/delete-account`,
 
 {
 

@@ -36,7 +36,7 @@ res.send("Food Order API Running");
 });
 
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5007;
 
 
 app.listen(PORT,()=>{
